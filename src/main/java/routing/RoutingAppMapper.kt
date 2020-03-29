@@ -93,7 +93,7 @@ class RoutingAppMapper(
         // API & WEB context
 
         app.get("/", { ctx ->
-            ctx.json(Response(1, "Korma Web Framework up and running..."))
+            ctx.json(Response(1, "Korma Web API up and running..."))
         }, roles(
                 AppConfiguration.MyRole.ADMIN,
                 AppConfiguration.MyRole.WEB_CONTEXT,
