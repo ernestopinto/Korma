@@ -8,7 +8,7 @@ import services.ServiceFactory
 object Korma {
 
     @JvmStatic
-    fun main(args: Array<String>) { // TODO: PORT and C1 -> file config env
+    fun main(args: Array<String>) { // TODO: PORT and C1 -> config env
 
         // All context function on Roles
 
