@@ -13,6 +13,7 @@ class SqliteService(data: DataContextFactoryOnSqLite) {
     private val convertUser: (Row) -> User = { row ->
         User(
                 row.int("id"),
+                row.stringOrNull("username"),
                 row.stringOrNull("name"),
                 row.stringOrNull("email")
         )

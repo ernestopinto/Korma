@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.kmehrunes:javalin-jwt:v0.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/kmehrunes/javalin-jwt/v0.2/javalin-jwt-v0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/kmehrunes/javalin-jwt/v0.2/javalin-jwt-v0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/kmehrunes/javalin-jwt/v0.2/javalin-jwt-v0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
