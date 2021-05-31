@@ -1,2 +1,2 @@
 # Korma
-Munticontext implementation of an web API on top of Javelin
+Munticontext implementation of an web API on top of Javalin
