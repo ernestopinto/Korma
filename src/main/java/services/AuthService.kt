@@ -1,5 +1,6 @@
 package services
 
+import datamodels.Origin
 import datamodels.Role
 import kotliquery.Row
 import kotliquery.Session
@@ -14,19 +15,27 @@ class AuthService (data: DataContextFactoryOnSqLite) {
         Role(
                 row.int("id"),
                 row.int("user"),
+                row.int("role")
+        )
+    }
+
+    private val convertOrigin: (Row) -> Origin = { row ->
+        Origin(
+                row.int("id"),
                 row.stringOrNull("key"),
                 row.int("role")
         )
     }
 
+
     init {
         this.sessionContext = data.getKotlinQueryContextForSqlite("jdbc:sqlite:example.db")
     }
 
-    fun getUserRoleByKey(key: String): List<Role> {
+    fun getAppRoleByKey(key: String): List<Origin> {
         return this.sessionContext!!.run(
-                queryOf("""select * from roles where key = :key""", mapOf("key" to key))
-                        .map(convertRole).asList
+                queryOf("""select * from origins where key = :key""", mapOf("key" to key))
+                        .map(convertOrigin).asList
         )
     }
 

@@ -1,2 +1,3 @@
-# korma
-Munticontext implementation of an web API on top of Javalin
+# Korma
+Multicontext implementation of an web API on top of Javalin
+

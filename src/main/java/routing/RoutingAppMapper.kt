@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.FileItem
 import org.apache.commons.fileupload.disk.DiskFileItemFactory
 import org.apache.commons.fileupload.servlet.ServletFileUpload
 import org.apache.commons.io.IOUtils
+import providers.JWTProviderFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -23,14 +24,15 @@ class RoutingAppMapper(
         App: Javalin,
         Controllers: ControllerFactory?,
         dataContextFactory: DataContextFactory?,
-        serviceFactory: ServiceFactory?
+        serviceFactory: ServiceFactory?,
+        jwtProvider: JWTProviderFactory?
 ) {
 
     init { /// put here your routing for your given AppContextCode
 
         when (AppContextCode) {
             "c1" -> {
-                deployRoutesForContextKorma(App, Controllers, dataContextFactory, serviceFactory)
+                deployRoutesForContextKorma(App, Controllers, dataContextFactory, serviceFactory, jwtProvider)
             }
             "c2" -> {
                 deployRoutesForContextJalfrezi(App)
@@ -38,7 +40,7 @@ class RoutingAppMapper(
             else -> { // default context
                 // define your default context
                 // deploys Korma by default
-                deployRoutesForContextKorma(App, Controllers, dataContextFactory, serviceFactory)
+                deployRoutesForContextKorma(App, Controllers, dataContextFactory, serviceFactory, jwtProvider)
             }
         }
     }
@@ -47,7 +49,8 @@ class RoutingAppMapper(
             app: Javalin,
             Controllers: ControllerFactory?,
             dataContextFactory: DataContextFactory?,
-            serviceFactory: ServiceFactory?
+            serviceFactory: ServiceFactory?,
+            jwtProvider: JWTProviderFactory?
     ) {
 
         // App Korma
@@ -57,9 +60,16 @@ class RoutingAppMapper(
         app.before { ctx ->
             run {
                 println("... arrived request -> controlled options")
-                println("v-key -> " + ctx.header("v-key"))
             }
         }
+
+        // JWT
+
+        app.get("token", { ctx ->
+            Controllers!!.getAuthController(ctx, dataContextFactory, serviceFactory, jwtProvider!!).getAuthToken()
+        }, roles(AppConfiguration.MyRole.API))
+
+        //
 
         //
 
@@ -93,7 +103,7 @@ class RoutingAppMapper(
         // API & WEB context
 
         app.get("/", { ctx ->
-            ctx.json(Response(1, "Korma Web Framework up and running..."))
+            ctx.json(Response(1, "Korma Web API up and running..."))
         }, roles(
                 AppConfiguration.MyRole.ADMIN,
                 AppConfiguration.MyRole.WEB_CONTEXT,
@@ -134,18 +144,21 @@ class RoutingAppMapper(
 
         // App on context 2
 
-        // inbound
+        // App Jalfrezi
 
-        app.before { ctx ->
-            run {
-                println("... arrived request -> controlled options")
-                println("v-code -> " + ctx.header("v-key"))
-            }
+        // code errors handling
+
+        app.error(400) { ctx ->
+            ctx.result("Jalfrezi Bad Request!")
         }
 
-        app.get("/") { ctx ->
-            ctx.result("Hello from Korma Context 2 - Jalfrezi")
-        }
+        //
+
+        // WEB context
+
+        app.get("/web", { ctx ->
+            ctx.json(Response(1, "Jalfrezi Web Framework up and running..."))
+        }, roles(AppConfiguration.MyRole.WEB_CONTEXT))
 
         ///
         app.post("/upload", { ctx: Context ->
